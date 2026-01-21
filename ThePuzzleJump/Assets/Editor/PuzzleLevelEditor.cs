@@ -285,9 +285,9 @@ public class PuzzleLevelEditor : EditorWindow
         Vector2 forward = dir switch
         {
             Direction.Up => Vector2.down,
-            Direction.Right => Vector2.left,
+            Direction.Right => Vector2.right,
             Direction.Down => Vector2.up,
-            Direction.Left => Vector2.right,
+            Direction.Left => Vector2.left,
             _ => Vector2.down
         };
 
@@ -348,6 +348,7 @@ public class PuzzleLevelEditor : EditorWindow
                 if (anEnemy != null)
                 {
                     anEnemy.direction = RotateClockwise(anEnemy.direction);
+                    break;
                 }
 
                 if (player != null && player.x == x && player.y == y)
@@ -373,6 +374,7 @@ public class PuzzleLevelEditor : EditorWindow
                 if (player != null && player.x == x && player.y == y)
                 {
                     player.direction = RotateClockwise(player.direction);
+                    break;
                 }
 
                 var enemy = enemies.Find(en => en.x == x && en.y == y);
