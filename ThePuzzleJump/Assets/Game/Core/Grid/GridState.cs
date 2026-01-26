@@ -1,0 +1,133 @@
+using System.Collections.Generic;
+using UnityEngine;
+using Game.Core.Enums;
+
+namespace Game.Core.Grid
+{
+    public class GridState
+    {
+        public int Width { get; }
+        public int Height { get; }
+
+        private readonly CellState[,] cells;
+
+        public PlayerState Player { get; private set; }
+        public IReadOnlyList<EnemyState> Enemies => enemies;
+
+        private readonly List<EnemyState> enemies = new();
+
+        // 
+        // CONSTRUCTION
+        // 
+        public GridState(int width, int height, CellType defaultCellType)
+        {
+            Width = width;
+            Height = height;
+
+            cells = new CellState[width, height];
+
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    cells[x, y] = new CellState(defaultCellType);
+        }
+
+        // 
+        // CELL ACCESS
+        // 
+        public bool IsInside(int x, int y)
+        {
+            return x >= 0 && y >= 0 && x < Width && y < Height;
+        }
+
+        public CellState GetCell(int x, int y)
+        {
+            if (!IsInside(x, y))
+                return null;
+
+            return cells[x, y];
+        }
+
+        public void SetCell(int x, int y, CellType celltype)
+        {
+            if (!IsInside(x, y))
+                return;
+
+            cells[x, y] = new CellState(celltype);
+        }
+
+        public bool IsWalkable(int x, int y)
+        {
+            if (!IsInside(x, y))
+                return false;
+
+            return cells[x, y].Type != CellType.Empty;
+        }
+
+        // 
+        // ENTITIES
+        // 
+        public void SetPlayer(PlayerState player)
+        {
+            Player = player;
+        }
+
+        public void AddEnemy(EnemyState enemy)
+        {
+            enemies.Add(enemy);
+        }
+
+        // 
+        // VALIDATION
+        // 
+        public bool Validate(out string error)
+        {
+            if (Player == null)
+            {
+                error = "No player in grid.";
+                return false;
+            }
+
+            if (!IsWalkable(Player.Position.x, Player.Position.y))
+            {
+                error = "Player is not on a walkable cell.";
+                return false;
+            }
+
+            foreach (var enemy in enemies)
+            {
+                if (!IsWalkable(enemy.Position.x, enemy.Position.y))
+                {
+                    error = "Enemy on non-walkable cell.";
+                    return false;
+                }
+            }
+
+            error = null;
+            return true;
+        }
+
+        // 
+        // DEBUG
+        // 
+        public void DebugPrint()
+        {
+            for (int y = Height - 1; y >= 0; y--)
+            {
+                string line = "";
+
+                for (int x = 0; x < Width; x++)
+                {
+                    if (Player.Position == new Vector2Int(x, y))
+                        line += " P ";
+                    else if (enemies.Exists(e => e.Position == new Vector2Int(x, y)))
+                        line += " E ";
+                    else
+                        line += cells[x, y].Type == CellType.Solid ? " . " : " X ";
+                }
+
+                Debug.Log(line);
+            }
+        }
+    }
+}
+

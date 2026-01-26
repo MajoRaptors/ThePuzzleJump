@@ -3,6 +3,8 @@ using System.IO;
 using UnityEditor;
 using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
+using Game.Core.Enums;
+using Game.Core.Level;
 
 public class PuzzleLevelEditor : EditorWindow
 {
@@ -25,51 +27,6 @@ public class PuzzleLevelEditor : EditorWindow
         Enemy
     }
 
-    private enum CellType
-    {
-        Empty,
-        Solid
-    }
-
-    private enum Direction
-    {
-        Up,
-        Right,
-        Down,
-        Left
-    }
-
-    private enum EnemyType
-    {
-        Normal,
-        Inverted
-    }
-
-
-    [System.Serializable]
-    private class CellData
-    {
-        public CellType cellType = CellType.Empty;
-    }
-
-    [System.Serializable]
-    private class EntityData
-    {
-        public int x;
-        public int y;
-        public Direction direction;
-        public EnemyType enemyType;
-    }
-
-    [System.Serializable]
-    private class LevelData
-    {
-        public int width;
-        public int height;
-        public CellData[] cells;
-        public EntityData player;
-        public List<EntityData> enemies;
-    }
 
     private CellData[,] grid;
     private EditMode currentMode = EditMode.Cell;
@@ -95,7 +52,7 @@ public class PuzzleLevelEditor : EditorWindow
         grid = new CellData[width, height];
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
-                grid[x, y] = new CellData();
+                grid[x, y] = new CellData(CellType.Empty);
     }
 
     private void OnGUI()
@@ -226,7 +183,7 @@ public class PuzzleLevelEditor : EditorWindow
         for (int x = 0; x < w; x++)
             for (int y = 0; y < h; y++)
                 newGrid[x, y] =
-                    (x < gridWidth && y < gridHeight) ? grid[x, y] : new CellData();
+                    (x < gridWidth && y < gridHeight) ? grid[x, y] : new CellData(CellType.Empty);
 
         grid = newGrid;
         gridWidth = w;
@@ -357,12 +314,7 @@ public class PuzzleLevelEditor : EditorWindow
                 }
                 else
                 {
-                    player = new EntityData
-                    {
-                        x = x,
-                        y = y,
-                        direction = Direction.Up
-                    };
+                    player = new EntityData(x, y, Direction.Up, EnemyType.Normal);
                 }
                 break;
 
@@ -384,12 +336,7 @@ public class PuzzleLevelEditor : EditorWindow
                 }
                 else
                 {
-                    enemies.Add(new EntityData
-                    {
-                        x = x,
-                        y = y,
-                        direction = Direction.Up
-                    });
+                    enemies.Add(new EntityData(x,y,Direction.Up, selectedEnemyType));
                 }
                 break;
         }
@@ -479,7 +426,7 @@ public class PuzzleLevelEditor : EditorWindow
                 if (i < data.cells.Length)
                     grid[x, y] = data.cells[i++];
                 else
-                    grid[x, y] = new CellData();
+                    grid[x, y] = new CellData(CellType.Empty);
             }
         }
 
@@ -503,10 +450,8 @@ public class PuzzleLevelEditor : EditorWindow
             return;
         }
 
-        LevelData data = new()
+        LevelData data = new(gridWidth,gridHeight)
         {
-            width = gridWidth,
-            height = gridHeight,
             cells = new CellData[gridWidth * gridHeight],
             player = player,
             enemies = enemies
