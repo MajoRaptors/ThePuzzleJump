@@ -36,6 +36,7 @@ namespace Game.Core.Grid
         // 
         public bool IsInside(int x, int y)
         {
+            //Debug.Log("x : " + x + " | y : " + y + " Width : " + Width + " | Height : " + Height);
             return x >= 0 && y >= 0 && x < Width && y < Height;
         }
 
@@ -61,6 +62,41 @@ namespace Game.Core.Grid
                 return false;
 
             return cells[x, y].Type != CellType.Empty;
+        }
+
+        public Vector2Int GetForwardCell(EntityState entity)
+        {
+            int targetX = entity.Position.x;
+            int targetY = entity.Position.y;
+
+            switch (entity.Direction)
+            {
+                case Direction.Up:
+                    targetY += 1;
+                    break;
+                case Direction.Right:
+                    targetX += 1;
+                    break;
+                case Direction.Down:
+                    targetY -= 1;
+                    break;
+                case Direction.Left:
+                    targetX -= 1;
+                    break;
+            }
+            return new Vector2Int(targetX, targetY);
+        }
+
+        public EntityState GetEnemyAt(Vector2Int cellLocation)
+        {
+            foreach (var enemy in enemies)
+            {
+                if (enemy.Position == cellLocation)
+                {
+                    return enemy;
+                }
+            }
+            return null;
         }
 
         // 
@@ -100,10 +136,32 @@ namespace Game.Core.Grid
                     error = "Enemy on non-walkable cell.";
                     return false;
                 }
+                if(HasEnemyAt(enemy.Position))
+                {
+                    error = "Two Enemys on the same cell.";
+                    return false;
+                }
+                if(enemy.Position == Player.Position)
+                {
+                    error = "Enemy on the Player cell.";
+                    return false;
+                }
             }
 
             error = null;
             return true;
+        }
+
+        public bool HasEnemyAt(Vector2Int cellLocation)
+        {
+            foreach (var enemy in enemies)
+            {
+                if(enemy.Position == cellLocation)
+                {
+                    return true;
+                }
+            }
+            return false;   
         }
 
         // 

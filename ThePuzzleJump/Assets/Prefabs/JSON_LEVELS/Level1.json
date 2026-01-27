@@ -1,0 +1,101 @@
+{
+    "width": 5,
+    "height": 5,
+    "cells": [
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        }
+    ],
+    "player": {
+        "x": 0,
+        "y": 3,
+        "direction": 2,
+        "enemyType": 0
+    },
+    "enemies": [
+        {
+            "x": 2,
+            "y": 3,
+            "direction": 2,
+            "enemyType": 0
+        },
+        {
+            "x": 4,
+            "y": 3,
+            "direction": 2,
+            "enemyType": 0
+        }
+    ]
+}

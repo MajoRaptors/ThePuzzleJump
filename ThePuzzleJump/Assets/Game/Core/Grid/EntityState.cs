@@ -13,5 +13,15 @@ namespace Game.Core.Grid
             Position = position;
             Direction = direction;
         }
+        public void Rotate(bool Clockwise)
+        {
+            int multiplicator = Clockwise ? 1 : 3;
+            Direction =(Direction)(((int)Direction + multiplicator) % 4);
+        }
+
+        public void MoveTo(Vector2Int newPosition)
+        {
+            Position = newPosition;
+        }
     }
 }

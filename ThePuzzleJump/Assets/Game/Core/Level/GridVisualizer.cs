@@ -6,9 +6,6 @@ using UnityEngine;
 
 public class GridVisualizer : MonoBehaviour
 {
-    [Header("Level Input")]
-    [SerializeField] private TextAsset levelJson;
-
     [Header("Prefabs")]
     [SerializeField] private GameObject cellPrefab;
     [SerializeField] private GameObject playerPrefab;
@@ -41,13 +38,6 @@ public class GridVisualizer : MonoBehaviour
 
 
     private readonly List<GameObject> spawnedObjects = new();
-
-    private void Start()
-    {
-        LevelData data = JsonUtility.FromJson<LevelData>(levelJson.text);
-        GridState grid = LevelLoader.Load(data);
-        Build(grid);
-    }
 
     public void Build(GridState grid)
     {
@@ -155,6 +145,12 @@ public class GridVisualizer : MonoBehaviour
             Destroy(go);
 
         spawnedObjects.Clear();
+    }
+
+    public void Refresh(GridState grid)
+    {
+        Clear();
+        Build(grid);
     }
 
     #region Gizmos
