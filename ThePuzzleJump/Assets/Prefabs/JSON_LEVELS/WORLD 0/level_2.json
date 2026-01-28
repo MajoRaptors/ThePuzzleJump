@@ -1,0 +1,44 @@
+{
+    "width": 2,
+    "height": 4,
+    "cells": [
+        {
+            "cellType": 2
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        }
+    ],
+    "player": {
+        "x": 0,
+        "y": 0,
+        "direction": 0,
+        "enemyType": 0
+    },
+    "enemies": [
+        {
+            "x": 0,
+            "y": 3,
+            "direction": 2,
+            "enemyType": 0
+        }
+    ]
+}
