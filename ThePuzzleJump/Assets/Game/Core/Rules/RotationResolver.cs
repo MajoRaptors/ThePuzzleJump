@@ -40,11 +40,5 @@ namespace Game.Core.Rules
                 default: break;
             };
         }
-
-        private static Direction RotateClockwise(Direction dir, bool Clockwise)
-        {
-            int multiplicator = Clockwise ? 1 : 3;
-            return (Direction)(((int)dir + multiplicator) % 4);
-        }
     }
 }

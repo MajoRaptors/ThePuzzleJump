@@ -1,6 +1,5 @@
 ﻿using Game.Core.Grid;
 using Game.Core.Level;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,12 +9,17 @@ namespace Game.Core.Rules
     {
         public static EnemyMoveResult Resolve(GridState grid)
         {
-            var intents = new List<EnemyMoveIntent>();
-            List<Vector2Int> finalPositions = new();
+            int enemyCount = grid.Enemies.Count;
 
-            // 1️ Chaque ennemi calcule sa case désirée
-            foreach (var enemy in grid.Enemies)
+            // 1️ Intents
+            var intents = new List<EnemyMoveIntent>(enemyCount);
+            var enemyIndexByPosition = new Dictionary<Vector2Int, int>();
+
+            for (int i = 0; i < enemyCount; i++)
             {
+                var enemy = grid.Enemies[i];
+                enemyIndexByPosition[enemy.Position] = i;
+
                 Vector2Int desired = grid.GetForwardCell(enemy);
                 intents.Add(new EnemyMoveIntent
                 {
@@ -34,59 +38,109 @@ namespace Game.Core.Rules
                 destinationCounts[intent.To]++;
             }
 
+            // 3️ Graphe de dépendances
+            // enemy i dépend de enemy j si j est sur la case que i veut
+            var dependencies = new List<int>[enemyCount];
+            for (int i = 0; i < enemyCount; i++)
+                dependencies[i] = new List<int>();
+
+            for (int i = 0; i < enemyCount; i++)
+            {
+                Vector2Int target = intents[i].To;
+
+                if (enemyIndexByPosition.TryGetValue(target, out int blockingEnemy))
+                {
+                    dependencies[i].Add(blockingEnemy);
+                }
+            }
+
+            // 4️ Résolution
+            var finalPositions = new Vector2Int[enemyCount];
+            var state = new ResolveState[enemyCount];
+
             bool gameOver = false;
 
-            int intentCount = 0;
-            // 3 Résolution finale
-            foreach (var intent in intents)
+            for (int i = 0; i < enemyCount; i++)
             {
-                // Valeur par défaut : ne bouge pas
-                finalPositions.Add(intent.From);
+                ResolveEnemy(i);
+            }
 
-                // Plusieurs ennemis → conflit
-                if (destinationCounts[intent.To] > 1)
-                {
-                    Debug.Log("conflit | id : " + intentCount);
-                    continue;
-                }
-
-                // Case vide → interdit
-                if (!grid.IsInside(intent.To.x, intent.To.y))
-                {
-                    Debug.Log("case vide | id : " + intentCount + " | case voulue : " + intent.To);
-                    continue;
-                }
-
-                // Joueur → Game Over
-                if (grid.Player.Position == intent.To)
-                {
-                    finalPositions.Add(intent.To);
-                    Debug.Log("gameover | id : " + intentCount);
-                    gameOver = true;
-                    continue;
-                }
-
-                // Ennemi présent → ne bouge pas
-                // TODO : Faire une vraie verif pour autoriser les chaines
-                if (grid.HasEnemyAt(intent.To))
-                {
-                    Debug.Log("ennemi deja present sur la case | id : " + intentCount);
-                    continue;
-                }
-
-
-                // Mouvement valide
-                finalPositions[finalPositions.Count - 1] = intent.To;
-                Debug.Log("final cell : " + intent.To);
-                intentCount++;
+            // 5️⃣ Application finale
+            for (int i = 0; i < enemyCount; i++)
+            {
+                finalPositions[i] = state[i] == ResolveState.Moved
+                    ? intents[i].To
+                    : intents[i].From;
             }
 
             return new EnemyMoveResult
             {
-                FinalPositions = finalPositions,
+                FinalPositions = new List<Vector2Int>(finalPositions),
                 IsGameOver = gameOver
             };
+
+            // ============================
+            // Local function : résolution DFS
+            // ============================
+            bool ResolveEnemy(int index)
+            {
+                if (state[index] == ResolveState.Resolved)
+                    return state[index] == ResolveState.Moved;
+
+                if (state[index] == ResolveState.Visiting)
+                {
+                    // Cycle détecté → blocage
+                    state[index] = ResolveState.Blocked;
+                    return false;
+                }
+
+                state[index] = ResolveState.Visiting;
+
+                var intent = intents[index];
+
+                // Règles de base
+                if (!grid.IsInside(intent.To.x, intent.To.y))
+                {
+                    state[index] = ResolveState.Blocked;
+                    return false;
+                }
+
+                if (destinationCounts[intent.To] > 1)
+                {
+                    state[index] = ResolveState.Blocked;
+                    return false;
+                }
+
+                if (grid.Player.Position == intent.To)
+                {
+                    gameOver = true;
+                    state[index] = ResolveState.Moved;
+                    return true;
+                }
+
+                // Dépendances
+                foreach (int dep in dependencies[index])
+                {
+                    if (!ResolveEnemy(dep))
+                    {
+                        state[index] = ResolveState.Blocked;
+                        return false;
+                    }
+                }
+
+                // La case sera libérée → mouvement autorisé
+                state[index] = ResolveState.Moved;
+                return true;
+            }
+        }
+
+        private enum ResolveState
+        {
+            None,
+            Visiting,
+            Moved,
+            Blocked,
+            Resolved
         }
     }
 }
-

@@ -20,14 +20,13 @@ namespace Game.Core.Rules
                 return Blocked();
             }
 
-            // Cellule cible
-            var cell = grid.GetCell(ForwardCell.x, ForwardCell.y);
-
-            // Cellule vide → bloqué
-            if (cell.Type == CellType.Empty)
+            if(grid.HasEnemyAt(ForwardCell))
             {
                 return Blocked();
             }
+
+            // Cellule cible
+            var cell = grid.GetCell(ForwardCell.x, ForwardCell.y);
 
             //Cas de Cellule spéciale
             switch (cell.Type)

@@ -16,6 +16,8 @@ namespace Game.Core.Grid
 
         private readonly List<EnemyState> enemies = new();
 
+        public readonly List<Vector2Int> Goals = new();
+
         // 
         // CONSTRUCTION
         // 
@@ -52,6 +54,11 @@ namespace Game.Core.Grid
         {
             if (!IsInside(x, y))
                 return;
+            if(celltype == CellType.Goal)
+            {
+                Goals.Add(new Vector2Int(x, y));
+            }
+
 
             cells[x, y] = new CellState(celltype);
         }
@@ -129,6 +136,25 @@ namespace Game.Core.Grid
                 return false;
             }
 
+            if (enemies.Count == 0)
+            {
+                error = "No enemy in grid.";
+                return false;
+            }
+
+            if (Goals.Count == 0)
+            {
+                error = "No goals in grid.";
+                return false;
+            }
+
+            if (Goals.Count > enemies.Count)
+            {
+                error = "Not anouth enemys to reach Victory. Check Enemies and goals";
+                return false;
+            }
+
+
             foreach (var enemy in enemies)
             {
                 if (!IsWalkable(enemy.Position.x, enemy.Position.y))
@@ -151,6 +177,7 @@ namespace Game.Core.Grid
             error = null;
             return true;
         }
+ 
 
         public bool HasEnemyAt(Vector2Int cellLocation)
         {

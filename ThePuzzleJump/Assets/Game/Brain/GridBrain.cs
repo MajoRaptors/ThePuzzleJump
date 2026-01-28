@@ -4,19 +4,27 @@ using Game.Core.Rules;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.VersionControl;
 using UnityEngine;
+
 
 public class GridBrain : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] private TextMeshPro UIText;
+
     [Header("References")]
     [SerializeField] private GridVisualizer gridVisualizer;
     [Header("Level Input")]
     [SerializeField] private TextAsset levelJson;
 
     private GridState gridState;
+    private bool GameOver = false;
+    private bool Victory = false;
 
     private void Start()
     {
+        UIText.gameObject.SetActive(false);
         LevelData data = JsonUtility.FromJson<LevelData>(levelJson.text);
         gridState = LevelLoader.Load(data);
         gridVisualizer.Build(gridState);
@@ -29,6 +37,8 @@ public class GridBrain : MonoBehaviour
 
     private void HandleInput()
     {
+        if (GameOver || Victory) return;
+
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             Rotate(true);
@@ -40,25 +50,36 @@ public class GridBrain : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             MoveForward();
+            if (CheckVictory())
+            {
+                Victory = true;
+                UIText.text = "Victory !";
+                UIText.gameObject.SetActive(true);
+            }
         }
     }
 
     private void Rotate(bool Clockwise)
     {
-        // 1️⃣ Rotation logique
+        // 1️ Rotation logique
         RotationResolver.ApplyRotation(gridState, Clockwise);
 
-        // 2️⃣ Mise à jour visuelle
+        // 2️ Mise à jour visuelle
         gridVisualizer.Refresh(gridState);
     }
 
     private void MoveForward()
     {
-        // 1️⃣ Déplacement du joueur
+        // 1️ Déplacement du joueur
         var playerResult = PlayerMoveResolver.Resolve(gridState);
 
         if (playerResult.CausesGameOver)
         {
+            GameOver = true;
+
+            UIText.text = "Game Over !";
+            UIText.gameObject.SetActive(true);
+
             Debug.Log("GAME OVER (player)");
             return;
         }
@@ -71,11 +92,18 @@ public class GridBrain : MonoBehaviour
 
         gridState.Player.MoveTo(playerResult.Target);
 
-        // 2️⃣ Déplacement des ennemis
+        // 2️ Déplacement des ennemis
         var enemyResult = EnemyMoveResolver.Resolve(gridState);
 
         if (enemyResult.IsGameOver)
         {
+            GameOver = true;
+
+
+            UIText.text = "Game Over !";
+            UIText.gameObject.SetActive(true);
+
+
             Debug.Log("GAME OVER (enemy)");
             return;
         }
@@ -87,17 +115,27 @@ public class GridBrain : MonoBehaviour
             enemyId++;
         }
 
-        /*int nenemyId = 0;
-        foreach (var enemy in enemyResult.FinalPositions)
-        {
-
-            Debug.Log("inex : " + nenemyId +" |pos in final: " + enemy + " | Final Position at index: " + enemyResult.FinalPositions[nenemyId]);
-
-            nenemyId++;
-        }*/
-
-        // 3️⃣ Mise à jour visuelle
+        // 3️ Mise à jour visuelle
         gridVisualizer.Refresh(gridState);
+    }
+    private bool CheckVictory()
+    {
+        if (gridState.Goals.Count == 0)
+        {
+            Debug.Log("No goals register in Goal List");
+            return false;
+        }
+        bool everyGoalIsReached = true;
+        foreach (var goal in gridState.Goals)
+        {
+            if (!gridState.HasEnemyAt(goal))
+            {
+                everyGoalIsReached = false;
+                Debug.Log("A goal is not reach");
+                break;
+            }
+        }
+        return everyGoalIsReached;
     }
 }
 

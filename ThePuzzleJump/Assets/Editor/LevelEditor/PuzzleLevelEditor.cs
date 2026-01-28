@@ -222,19 +222,42 @@ public class PuzzleLevelEditor : EditorWindow
 
     private void DrawCell(Rect rect, int x, int y)
     {
-        EditorGUI.DrawRect(
-            rect,
-            grid[x, y].cellType == CellType.Empty
-                ? Color.black
-                : new Color(0.6f, 0.5f, 0.4f)
-        );
+        Color cellColor;
+
+    switch (grid[x, y].cellType)
+    {
+        case CellType.Empty:
+            cellColor = Color.black;
+            break;
+
+        case CellType.Solid:
+            cellColor = new Color(0.6f, 0.5f, 0.4f);
+            break;
+
+        case CellType.Goal:
+            cellColor = new Color(1f, 0.5f, 0f); // orange
+            break;
+
+        default:
+            cellColor = Color.magenta; // debug visuel si oubli
+            break;
+    }
+        EditorGUI.DrawRect(rect, cellColor);
 
         if (player != null && player.x == x && player.y == y)
             DrawArrow(rect, player.direction, Color.yellow);
-
-        foreach (var e in enemies)
-            if (e.x == x && e.y == y)
-                DrawArrow(rect, e.direction, Color.red);
+        Color EnemyColor = Color.red;
+        foreach (var enemy in enemies)
+            if (enemy.x == x && enemy.y == y)
+            {   
+                switch(enemy.enemyType)
+                {
+                    case EnemyType.Inverted :
+                        EnemyColor = new Color(0.6f, 0.2f, 0.8f);
+                        break;
+                }
+                DrawArrow(rect, enemy.direction, EnemyColor);
+            }
     }
 
     private void DrawArrow(Rect rect, Direction dir, Color color)
@@ -386,9 +409,16 @@ public class PuzzleLevelEditor : EditorWindow
 
     private void ImportJson()
     {
+        string defaultFolder = Path.Combine(Application.dataPath, "Prefabs/JSON_LEVELS");
+
+        if (!Directory.Exists(defaultFolder))
+        {
+            Directory.CreateDirectory(defaultFolder);
+        }
+
         string path = EditorUtility.OpenFilePanel(
             "Ouvrir Niveau (JSON)",
-            Application.dataPath,
+            defaultFolder,
             "json"
         );
 
@@ -456,18 +486,51 @@ public class PuzzleLevelEditor : EditorWindow
             player = player,
             enemies = enemies
         };
-
+        int goalcount = 0;
         int i = 0;
         for (int y = 0; y < gridHeight; y++)
+        {
             for (int x = 0; x < gridWidth; x++)
+            {
                 data.cells[i++] = grid[x, y];
+                if (grid[x, y].cellType == CellType.Goal)
+                    goalcount++;
+            }
+        }
+        if (goalcount == 0)
+        {
+            EditorUtility.DisplayDialog(
+                "Export impossible",
+                "Le niveau doit contenir au moins une case de Victoire.",
+                "OK"
+            );
+            return;
+        }
+        if (goalcount > enemies.Count)
+        {
+            EditorUtility.DisplayDialog(
+                "Export impossible",
+                "Le niveau doit contenir au moins autant d'ennemis que de case de Victoire.",
+                "OK"
+            );
+            return;
+        }
+
+        string defaultFolder = Path.Combine(Application.dataPath, "Prefabs/JSON_LEVELS");
+
+        if (!Directory.Exists(defaultFolder))
+        {
+            Directory.CreateDirectory(defaultFolder);
+        }
 
         string path = EditorUtility.SaveFilePanel(
             "Export Level",
-            Application.dataPath,
+            defaultFolder,
             "Level.json",
             "json"
         );
+
+        
 
         if (!string.IsNullOrEmpty(path))
             File.WriteAllText(path, JsonUtility.ToJson(data, true));

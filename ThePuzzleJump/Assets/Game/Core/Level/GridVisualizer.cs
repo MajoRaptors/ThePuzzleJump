@@ -65,18 +65,21 @@ public class GridVisualizer : MonoBehaviour
                         0,
                         y * (cellSize + spacing)
                     );
+                GameObject cellGO = Spawn(cellPrefab, pos, cellSize);
 
-                Spawn(cellPrefab, pos, cellSize);
+                CellView cellView = cellGO.GetComponent<CellView>();
+                cellView.SetCellType(cell.Type);
+
             }
         }
 
         // Player
         if (grid.Player != null)
-            SpawnEntity(playerPrefab, grid.Player, origin, cellSize, spacing);
+            SpawnEntity(playerPrefab, grid.Player, origin, cellSize, spacing, null);
 
         // Enemies
         foreach (var enemy in grid.Enemies)
-            SpawnEntity(enemyPrefab, enemy, origin, cellSize, spacing);
+            SpawnEntity(enemyPrefab, enemy, origin, cellSize, spacing, enemy.Type);
     }
 
     private void ComputeLayout(
@@ -109,7 +112,8 @@ public class GridVisualizer : MonoBehaviour
         EntityState entity,
         Vector3 origin,
         float cellSize,
-        float spacing
+        float spacing,
+        EnemyType? enemyType
     )
     {
         Vector3 pos = origin
@@ -119,9 +123,9 @@ public class GridVisualizer : MonoBehaviour
                 entity.Position.y * (cellSize + spacing)
             );
 
-        GameObject go = Spawn(prefab, pos, cellSize);
+        GameObject enemyGO = Spawn(prefab, pos, cellSize);
 
-        go.transform.rotation = entity.Direction switch
+        enemyGO.transform.rotation = entity.Direction switch
         {
             Direction.Up => Quaternion.identity,
             Direction.Right => Quaternion.Euler(0, 90, 0),
@@ -129,6 +133,13 @@ public class GridVisualizer : MonoBehaviour
             Direction.Left => Quaternion.Euler(0, 270, 0),
             _ => Quaternion.identity
         };
+
+        if (enemyType != null)
+        {
+            EnemyView enemyView = enemyGO.GetComponent<EnemyView>();
+            enemyView.SetEnemyType((EnemyType)enemyType);
+        }
+        
     }
 
     private GameObject Spawn(GameObject prefab, Vector3 pos, float size)

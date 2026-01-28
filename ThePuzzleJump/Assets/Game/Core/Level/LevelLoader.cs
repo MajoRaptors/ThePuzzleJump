@@ -2,6 +2,7 @@ using Game.Core.Enums;
 using Game.Core.Grid;
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Game.Core.Level
@@ -30,6 +31,8 @@ namespace Game.Core.Level
 
             // 4?? Chargement des ennemis
             LoadEnemies(data, gridState);
+
+
 
             return gridState;
         }

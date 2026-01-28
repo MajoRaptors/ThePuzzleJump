@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5885806676671512311}
   - component: {fileID: 2254523056369756745}
   - component: {fileID: 9042266919882578821}
+  - component: {fileID: 4104330900681420983}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -105,3 +106,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4104330900681420983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6773465649923818787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 076602f38e3788a43990010131a20f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellRenderer: {fileID: 2254523056369756745}
+  solidMat: {fileID: 2100000, guid: e6b9b44320f4448d9d5e0ee634259966, type: 2}
+  goalMat: {fileID: 2100000, guid: aadd5a709a48466c887296bb5b1b8110, type: 2}
