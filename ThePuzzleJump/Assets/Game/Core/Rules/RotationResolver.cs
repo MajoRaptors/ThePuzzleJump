@@ -24,21 +24,20 @@ namespace Game.Core.Rules
         private static void RotateEnemy(EnemyState enemy, bool Clockwise)
         {
              switch(enemy.Type)
-            {
-                case EnemyType.Normal:
-                    {
-                        enemy.Rotate(Clockwise);
-                        break;
-                    }
-                
+            {                
                 case EnemyType.Inverted:
                     {
                         enemy.Rotate(!Clockwise);
                         break;
                     }
                 
-                default: break;
-            };
+                default:
+                    {
+                        enemy.Rotate(Clockwise);
+                        break;
+                    }
+            }
+            ;
         }
     }
 }

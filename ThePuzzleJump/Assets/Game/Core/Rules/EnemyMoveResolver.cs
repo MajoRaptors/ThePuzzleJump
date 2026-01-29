@@ -65,7 +65,7 @@ namespace Game.Core.Rules
                 ResolveEnemy(i);
             }
 
-            // 5️⃣ Application finale
+            // 5️ Application finale
             for (int i = 0; i < enemyCount; i++)
             {
                 finalPositions[i] = state[i] == ResolveState.Moved
@@ -99,8 +99,15 @@ namespace Game.Core.Rules
                 var intent = intents[index];
 
                 // Règles de base
-                if (!grid.IsInside(intent.To.x, intent.To.y))
+                if (!grid.IsWalkable(intent.To.x, intent.To.y))
                 {
+                    EnemyState enemyState = (EnemyState)grid.GetEnemyAt(intent.From);
+                    if (enemyState.Type == Enums.EnemyType.Blind)
+                    {
+                        gameOver = true;
+                        state[index] = ResolveState.Moved;
+                        return true;
+                    }
                     state[index] = ResolveState.Blocked;
                     return false;
                 }

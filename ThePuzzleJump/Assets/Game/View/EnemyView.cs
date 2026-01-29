@@ -9,6 +9,7 @@ public class EnemyView : MonoBehaviour
     [Header("Materials")]
     [SerializeField] private Material normalMat;
     [SerializeField] private Material invertedMat;
+    [SerializeField] private Material blindMat;
 
     private EnemyType currentType;
 
@@ -28,6 +29,10 @@ public class EnemyView : MonoBehaviour
 
             case EnemyType.Inverted:
                 enemyRenderer.material = invertedMat;
+                break;
+
+            case EnemyType.Blind:
+                enemyRenderer.material = blindMat;
                 break;
 
             default:

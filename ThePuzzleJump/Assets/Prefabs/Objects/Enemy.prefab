@@ -336,6 +336,7 @@ MonoBehaviour:
   enemyRenderer: {fileID: 3577796607115242295}
   normalMat: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
   invertedMat: {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+  blindMat: {fileID: 2100000, guid: aadd5a709a48466c887296bb5b1b8110, type: 2}
 --- !u!1 &4863137742012686003
 GameObject:
   m_ObjectHideFlags: 0

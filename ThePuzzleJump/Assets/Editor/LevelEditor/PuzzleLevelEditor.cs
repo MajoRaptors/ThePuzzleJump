@@ -255,6 +255,9 @@ public class PuzzleLevelEditor : EditorWindow
                     case EnemyType.Inverted :
                         EnemyColor = new Color(0.6f, 0.2f, 0.8f);
                         break;
+                    case EnemyType.Blind :
+                        EnemyColor = Color.white;
+                        break;
                 }
                 DrawArrow(rect, enemy.direction, EnemyColor);
             }
@@ -296,18 +299,27 @@ public class PuzzleLevelEditor : EditorWindow
             return;
 
 
-        // CLIC DROIT ? suppression
+        // CLIC DROIT
         if (e.button == 1 && e.type == EventType.MouseDown)
         {
-            if (player != null && player.x == x && player.y == y)
-                player = null;
+            if (currentMode == EditMode.Cell)
+            {
+                grid[x, y].cellType = CellType.Empty;
+                RemoveEntitiesIfInvalid(x, y);
+            }
+            else
+            {
+                if (player != null && player.x == x && player.y == y)
+                    player = null;
 
-            enemies.RemoveAll(en => en.x == x && en.y == y);
+                enemies.RemoveAll(en => en.x == x && en.y == y);
+            }
 
             e.Use();
             Repaint();
             return;
         }
+
 
         // CLIC GAUCHE
         if (e.button != 0)
