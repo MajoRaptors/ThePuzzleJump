@@ -12,21 +12,25 @@ public class GridBrain : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] private TextMeshPro UIText;
+    [SerializeField] private TextMeshPro MovementsCountText;
 
     [Header("References")]
     [SerializeField] private GridVisualizer gridVisualizer;
     [Header("Level Input")]
-    [SerializeField] private TextAsset levelJson;
+    [SerializeField] public TextAsset levelJson;
 
     private GridState gridState;
-    private bool GameOver = false;
-    private bool Victory = false;
+    public bool GameOver = false;
+    public bool Victory = false;
     private int MovementsCount = 0;
 
-    private void Start()
+    public void Start()
     {
+        Victory = false ;
+        GameOver = false ; 
         MovementsCount = 0;
         UIText.gameObject.SetActive(false);
+        MovementsCountText.text = MovementsCount.ToString();
         LevelData data = JsonUtility.FromJson<LevelData>(levelJson.text);
         gridState = LevelLoader.Load(data);
         gridVisualizer.Build(gridState);
@@ -51,7 +55,13 @@ public class GridBrain : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MoveForward();
+            if (MoveForward())
+            {
+                MovementsCount++;
+
+                MovementsCountText.text = MovementsCount.ToString();
+            }
+
             if (CheckVictory())
             {
                 Victory = true;
@@ -59,7 +69,6 @@ public class GridBrain : MonoBehaviour
                 UIText.gameObject.SetActive(true);
             }
 
-            MovementsCount++;
         }
     }
 
@@ -72,7 +81,7 @@ public class GridBrain : MonoBehaviour
         gridVisualizer.Refresh(gridState);
     }
 
-    private void MoveForward()
+    private bool MoveForward()
     {
         // 1️ Déplacement du joueur
         var playerResult = PlayerMoveResolver.Resolve(gridState);
@@ -85,13 +94,14 @@ public class GridBrain : MonoBehaviour
             UIText.gameObject.SetActive(true);
 
             Debug.Log("GAME OVER (player)");
-            return;
+            return true;
+
         }
 
         if (!playerResult.CanMove)
         {
             Debug.Log("Can't Move (player)");
-            return;
+            return false;
         }
 
         gridState.Player.MoveTo(playerResult.Target);
@@ -109,7 +119,7 @@ public class GridBrain : MonoBehaviour
 
 
             Debug.Log("GAME OVER (enemy)");
-            return;
+            return true;
         }
         int enemyId = 0;
         foreach (var enemy in gridState.Enemies)
@@ -121,6 +131,7 @@ public class GridBrain : MonoBehaviour
 
         // 3️ Mise à jour visuelle
         gridVisualizer.Refresh(gridState);
+        return true;
     }
     private bool CheckVictory()
     {
