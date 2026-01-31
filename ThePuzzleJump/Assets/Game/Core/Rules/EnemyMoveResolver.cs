@@ -1,4 +1,5 @@
-﻿using Game.Core.Grid;
+﻿using Game.Core.Enums;
+using Game.Core.Grid;
 using Game.Core.Level;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Game.Core.Rules
 {
     public static class EnemyMoveResolver
     {
-        public static EnemyMoveResult Resolve(GridState grid)
+        public static EnemyMoveResult Resolve(GridState grid, int movementCount)
         {
             int enemyCount = grid.Enemies.Count;
 
@@ -97,15 +98,29 @@ namespace Game.Core.Rules
                 state[index] = ResolveState.Visiting;
 
                 var intent = intents[index];
-                if(grid.GetCell(intent.From.x, intent.From.y).Type == Enums.CellType.LockerGoal)
+                EnemyState enemyState = (EnemyState)grid.GetEnemyAt(intent.From);
+
+                // Si il est sur une cellule de type LockerGoal 
+                if (grid.GetCell(intent.From.x, intent.From.y).Type == Enums.CellType.LockerGoal)
                 {
                     state[index] = ResolveState.Blocked;
                     return false;
                 }
-                // Règles de base
+                // Si c'est un switcher on check
+                if (enemyState.Type == EnemyType.SwitcherFirst || enemyState.Type == EnemyType.SwitcherSecond)
+                {
+                    // On vérifie les conditions Switcher (Si Pair et First, on passe au step suivant, et si impair et second pareil. Tout autre cas de switcher est stopé)
+                    if ((movementCount % 2 == 0) != (enemyState.Type == EnemyType.SwitcherFirst))
+                    {
+                        state[index] = ResolveState.Blocked;
+                        return false;
+                    }
+                }
+
+                // Verif de Vide
                 if (!grid.IsWalkable(intent.To.x, intent.To.y))
                 {
-                    EnemyState enemyState = (EnemyState)grid.GetEnemyAt(intent.From);
+                    // Si l'ennemy est aveugle il tombe
                     if (enemyState.Type == Enums.EnemyType.Blind)
                     {
                         gameOver = true;
@@ -116,12 +131,14 @@ namespace Game.Core.Rules
                     return false;
                 }
 
+                //Si plusieurs ennemis visent la même case
                 if (destinationCounts[intent.To] > 1)
                 {
                     state[index] = ResolveState.Blocked;
                     return false;
                 }
 
+                //Si enemy saute sur joueur = GAME OVER
                 if (grid.Player.Position == intent.To)
                 {
                     gameOver = true;

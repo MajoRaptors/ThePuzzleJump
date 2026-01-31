@@ -10,6 +10,8 @@ public class EnemyView : MonoBehaviour
     [SerializeField] private Material normalMat;
     [SerializeField] private Material invertedMat;
     [SerializeField] private Material blindMat;
+    [SerializeField] private Material switcherFirstMat;
+    [SerializeField] private Material switcherSecondMat;
 
     private EnemyType currentType;
 
@@ -35,8 +37,16 @@ public class EnemyView : MonoBehaviour
                 enemyRenderer.material = blindMat;
                 break;
 
+            case EnemyType.SwitcherFirst:
+                enemyRenderer.material = switcherFirstMat;
+                break;
+
+            case EnemyType.SwitcherSecond:
+                enemyRenderer.material = switcherSecondMat;
+                break;
+
             default:
-                Debug.LogWarning($"CellType non géré : {currentType}");
+                Debug.LogWarning($"EnemyType non géré : {currentType}");
                 break;
         }
     }

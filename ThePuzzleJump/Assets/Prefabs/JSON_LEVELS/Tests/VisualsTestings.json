@@ -1,7 +1,13 @@
 {
-    "width": 5,
-    "height": 4,
+    "width": 6,
+    "height": 6,
     "cells": [
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
         {
             "cellType": 1
         },
@@ -48,6 +54,15 @@
             "cellType": 1
         },
         {
+            "cellType": 2
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
             "cellType": 1
         },
         {
@@ -57,7 +72,40 @@
             "cellType": 2
         },
         {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 3
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
             "cellType": 2
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
         },
         {
             "cellType": 1
@@ -87,6 +135,18 @@
             "y": 0,
             "direction": 0,
             "enemyType": 2
+        },
+        {
+            "x": 4,
+            "y": 0,
+            "direction": 0,
+            "enemyType": 3
+        },
+        {
+            "x": 5,
+            "y": 0,
+            "direction": 0,
+            "enemyType": 4
         }
     ]
 }

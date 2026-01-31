@@ -51,7 +51,6 @@ public class GridBrain : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MovementsCount ++;
             MoveForward();
             if (CheckVictory())
             {
@@ -59,6 +58,8 @@ public class GridBrain : MonoBehaviour
                 UIText.text = "Victory !";
                 UIText.gameObject.SetActive(true);
             }
+
+            MovementsCount++;
         }
     }
 
@@ -96,7 +97,7 @@ public class GridBrain : MonoBehaviour
         gridState.Player.MoveTo(playerResult.Target);
 
         // 2️ Déplacement des ennemis
-        var enemyResult = EnemyMoveResolver.Resolve(gridState);
+        var enemyResult = EnemyMoveResolver.Resolve(gridState, MovementsCount);
 
         if (enemyResult.IsGameOver)
         {
@@ -134,7 +135,7 @@ public class GridBrain : MonoBehaviour
             if (!gridState.HasEnemyAt(goal))
             {
                 everyGoalIsReached = false;
-                Debug.Log("A goal is not reach");
+                //Debug.Log("A goal is not reach");
                 break;
             }
         }

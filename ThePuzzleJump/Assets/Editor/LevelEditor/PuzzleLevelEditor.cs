@@ -262,6 +262,12 @@ public class PuzzleLevelEditor : EditorWindow
                     case EnemyType.Blind :
                         EnemyColor = Color.white; // Blanc
                         break;
+                    case EnemyType.SwitcherFirst :
+                        EnemyColor = new Color(0.75f, 0.75f, 0.75f); // Argent (gris clair)
+                        break;
+                    case EnemyType.SwitcherSecond :
+                        EnemyColor = new Color(0.5f, 0.8f, 1f); // Bleu clair (Sky)
+                        break;
                 }
                 DrawArrow(rect, enemy.direction, EnemyColor);
             }
@@ -459,8 +465,9 @@ public class PuzzleLevelEditor : EditorWindow
         }
 
         // On récupère la taille de la grille
-        gridWidth = data.width;
-        gridHeight = data.height;
+        gridWidth = pendingWidth = data.width;
+        gridHeight = pendingHeight = data.height;
+
 
         // On initialise la grille
         grid = new CellData[gridWidth, gridHeight];

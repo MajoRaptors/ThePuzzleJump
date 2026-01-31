@@ -337,6 +337,8 @@ MonoBehaviour:
   normalMat: {fileID: 2100000, guid: 0757baeddc7fa3141b7f60465983241f, type: 2}
   invertedMat: {fileID: 2100000, guid: 194d6b55b40762041a41d660b11bf619, type: 2}
   blindMat: {fileID: 2100000, guid: 157b1aefc087f7e409481475569b3e14, type: 2}
+  switcherFirstMat: {fileID: 2100000, guid: d53013535f6b7f444a65abadfc52934e, type: 2}
+  switcherSecondMat: {fileID: 2100000, guid: 6603d88a9a04a2e41ae28d5dc9c3a2a6, type: 2}
 --- !u!1 &4863137742012686003
 GameObject:
   m_ObjectHideFlags: 0

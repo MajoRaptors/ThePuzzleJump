@@ -4,7 +4,9 @@ namespace Game.Core.Enums
     {
         Normal,
         Inverted,
-        Blind
+        Blind,
+        SwitcherFirst,
+        SwitcherSecond
     }
 }
 
