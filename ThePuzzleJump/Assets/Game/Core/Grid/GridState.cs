@@ -54,7 +54,8 @@ namespace Game.Core.Grid
         {
             if (!IsInside(x, y))
                 return;
-            if(celltype == CellType.Goal)
+            if(celltype == CellType.Goal ||
+               celltype == CellType.LockerGoal)
             {
                 Goals.Add(new Vector2Int(x, y));
             }
