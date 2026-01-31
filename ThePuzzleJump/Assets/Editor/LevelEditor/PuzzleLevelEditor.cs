@@ -231,12 +231,16 @@ public class PuzzleLevelEditor : EditorWindow
             break;
 
         case CellType.Solid:
-            cellColor = new Color(0.6f, 0.5f, 0.4f);
+            cellColor = new Color(0.6f, 0.5f, 0.4f); //brun
             break;
 
         case CellType.Goal:
             cellColor = new Color(1f, 0.5f, 0f); // orange
             break;
+
+        case CellType.LockerGoal:
+            cellColor = new Color(0f, 0.75f, 0.8f); // Turquoise
+                break;
 
         default:
             cellColor = Color.magenta; // debug visuel si oubli
@@ -246,17 +250,17 @@ public class PuzzleLevelEditor : EditorWindow
 
         if (player != null && player.x == x && player.y == y)
             DrawArrow(rect, player.direction, Color.yellow);
-        Color EnemyColor = Color.red;
+        Color EnemyColor = Color.red; // Rouge
         foreach (var enemy in enemies)
             if (enemy.x == x && enemy.y == y)
             {   
                 switch(enemy.enemyType)
                 {
                     case EnemyType.Inverted :
-                        EnemyColor = new Color(0.6f, 0.2f, 0.8f);
+                        EnemyColor = new Color(0.6f, 0.2f, 0.8f); // Violet
                         break;
                     case EnemyType.Blind :
-                        EnemyColor = Color.white;
+                        EnemyColor = Color.white; // Blanc
                         break;
                 }
                 DrawArrow(rect, enemy.direction, EnemyColor);

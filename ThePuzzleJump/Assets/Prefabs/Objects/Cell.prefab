@@ -119,5 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellRenderer: {fileID: 2254523056369756745}
-  solidMat: {fileID: 2100000, guid: e6b9b44320f4448d9d5e0ee634259966, type: 2}
-  goalMat: {fileID: 2100000, guid: aadd5a709a48466c887296bb5b1b8110, type: 2}
+  solidMat: {fileID: 2100000, guid: cfbcb94acaf8e794ea14c127288ebb6f, type: 2}
+  goalMat: {fileID: 2100000, guid: 796e3871f4b09a24eafa11a3e012e2e7, type: 2}
+  lockGoalMat: {fileID: 2100000, guid: 194d6b55b40762041a41d660b11bf619, type: 2}

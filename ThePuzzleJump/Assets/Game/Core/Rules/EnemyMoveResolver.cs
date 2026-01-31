@@ -97,7 +97,11 @@ namespace Game.Core.Rules
                 state[index] = ResolveState.Visiting;
 
                 var intent = intents[index];
-
+                if(grid.GetCell(intent.From.x, intent.From.y).Type == Enums.CellType.LockerGoal)
+                {
+                    state[index] = ResolveState.Blocked;
+                    return false;
+                }
                 // Règles de base
                 if (!grid.IsWalkable(intent.To.x, intent.To.y))
                 {

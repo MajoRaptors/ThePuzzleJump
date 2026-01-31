@@ -1,6 +1,6 @@
 {
     "width": 5,
-    "height": 3,
+    "height": 4,
     "cells": [
         {
             "cellType": 1
@@ -36,7 +36,22 @@
             "cellType": 1
         },
         {
-            "cellType": 2
+            "cellType": 3
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
         },
         {
             "cellType": 2

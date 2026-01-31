@@ -9,6 +9,7 @@ public class CellView : MonoBehaviour
     [Header("Materials")]
     [SerializeField] private Material solidMat;
     [SerializeField] private Material goalMat;
+    [SerializeField] private Material lockGoalMat;
 
     private CellType currentType;
 
@@ -28,6 +29,10 @@ public class CellView : MonoBehaviour
 
             case CellType.Goal:
                 cellRenderer.material = goalMat;
+                break;
+
+            case CellType.LockerGoal:
+                cellRenderer.material = lockGoalMat;
                 break;
 
             default:

@@ -21,9 +21,11 @@ public class GridBrain : MonoBehaviour
     private GridState gridState;
     private bool GameOver = false;
     private bool Victory = false;
+    private int MovementsCount = 0;
 
     private void Start()
     {
+        MovementsCount = 0;
         UIText.gameObject.SetActive(false);
         LevelData data = JsonUtility.FromJson<LevelData>(levelJson.text);
         gridState = LevelLoader.Load(data);
@@ -49,6 +51,7 @@ public class GridBrain : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
+            MovementsCount ++;
             MoveForward();
             if (CheckVictory())
             {

@@ -4,6 +4,7 @@ namespace Game.Core.Enums
     {
         Empty,
         Solid,
-        Goal
+        Goal,
+        LockerGoal
     }
 }
