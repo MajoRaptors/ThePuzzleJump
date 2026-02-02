@@ -75,7 +75,7 @@ public class GridBrain : MonoBehaviour
     private void Rotate(bool Clockwise)
     {
         // 1️ Rotation logique
-        RotationResolver.ApplyRotation(gridState, Clockwise);
+        RotationResolver.ApplyRotation(gridState, Clockwise, MovementsCount);
 
         // 2️ Mise à jour visuelle
         gridVisualizer.Refresh(gridState);

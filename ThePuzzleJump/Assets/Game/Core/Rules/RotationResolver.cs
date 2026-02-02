@@ -1,6 +1,7 @@
 using Game.Core.Enums;
 using Game.Core.Grid;
 using Game.Core.Level;
+using System;
 
 namespace Game.Core.Rules
 {
@@ -9,7 +10,7 @@ namespace Game.Core.Rules
     /// </summary>
     public static class RotationResolver
     {
-        public static void ApplyRotation(GridState grid, bool Clockwise)
+        public static void ApplyRotation(GridState grid, bool Clockwise, int movementCount)
         {
             // 1. Rotation du joueur
             grid.Player.Rotate(Clockwise);
@@ -17,17 +18,36 @@ namespace Game.Core.Rules
             // 2. Rotation des ennemis
             foreach (var enemy in grid.Enemies)
             {
-                RotateEnemy(enemy, Clockwise);
+
+                RotateEnemy(enemy, Clockwise, movementCount);
             }
         }
 
-        private static void RotateEnemy(EnemyState enemy, bool Clockwise)
+        private static void RotateEnemy(EnemyState enemy, bool Clockwise, int movementCount)
         {
              switch(enemy.Type)
             {                
                 case EnemyType.Inverted:
                     {
                         enemy.Rotate(!Clockwise);
+                        break;
+                    }
+
+                case EnemyType.SwitcherFirst:
+                    {
+                        if (movementCount % 2 == 0)
+                        {
+                            enemy.Rotate(Clockwise);
+                        }
+                        break;
+                    }
+
+                case EnemyType.SwitcherSecond:
+                    {
+                        if (movementCount % 2 != 0)
+                        {
+                            enemy.Rotate(Clockwise);
+                        }
                         break;
                     }
                 
