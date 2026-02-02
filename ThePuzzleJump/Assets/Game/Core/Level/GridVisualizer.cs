@@ -39,7 +39,7 @@ public class GridVisualizer : MonoBehaviour
 
     private readonly List<GameObject> spawnedObjects = new();
 
-    public void Build(GridState grid)
+    public void Build(GridState grid, Dictionary<Vector2Int, int> weakenedCells)
     {
         Clear();
 
@@ -69,7 +69,10 @@ public class GridVisualizer : MonoBehaviour
 
                 CellView cellView = cellGO.GetComponent<CellView>();
                 cellView.SetCellType(cell.Type);
-
+                if (weakenedCells.ContainsKey(new Vector2Int(x, y)))
+                {
+                    cellView.SetWeakenedState(weakenedCells[new Vector2Int(x, y)]);
+                }
             }
         }
 
@@ -158,10 +161,10 @@ public class GridVisualizer : MonoBehaviour
         spawnedObjects.Clear();
     }
 
-    public void Refresh(GridState grid)
+    public void Refresh(GridState grid, Dictionary<Vector2Int, int> weakenedCells)
     {
         Clear();
-        Build(grid);
+        Build(grid, weakenedCells);
     }
 
     #region Gizmos

@@ -1,11 +1,14 @@
-﻿using Game.Core.Grid;
+﻿using Game.Core.Enums;
+using Game.Core.Grid;
 using Game.Core.Level;
 using Game.Core.Rules;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 
 public class GridBrain : MonoBehaviour
@@ -23,6 +26,8 @@ public class GridBrain : MonoBehaviour
     public bool GameOver = false;
     public bool Victory = false;
     private int MovementsCount = 0;
+    private Dictionary<Vector2Int, int> weakenedCells = new();
+
 
     public void Start()
     {
@@ -33,7 +38,8 @@ public class GridBrain : MonoBehaviour
         MovementsCountText.text = MovementsCount.ToString();
         LevelData data = JsonUtility.FromJson<LevelData>(levelJson.text);
         gridState = LevelLoader.Load(data);
-        gridVisualizer.Build(gridState);
+        weakenedCells.Clear();
+        gridVisualizer.Build(gridState, weakenedCells);
     }
 
     private void Update()
@@ -69,6 +75,8 @@ public class GridBrain : MonoBehaviour
                 UIText.gameObject.SetActive(true);
             }
 
+            TickWeakenedCells();
+
         }
     }
 
@@ -78,7 +86,7 @@ public class GridBrain : MonoBehaviour
         RotationResolver.ApplyRotation(gridState, Clockwise, MovementsCount);
 
         // 2️ Mise à jour visuelle
-        gridVisualizer.Refresh(gridState);
+        gridVisualizer.Refresh(gridState, weakenedCells);
     }
 
     private bool MoveForward()
@@ -106,6 +114,9 @@ public class GridBrain : MonoBehaviour
 
         gridState.Player.MoveTo(playerResult.Target);
 
+        //Active case fragilisée ?
+        RegisterWeakenedCell(gridState.Player.Position);
+
         // 2️ Déplacement des ennemis
         var enemyResult = EnemyMoveResolver.Resolve(gridState, MovementsCount);
 
@@ -124,13 +135,13 @@ public class GridBrain : MonoBehaviour
         int enemyId = 0;
         foreach (var enemy in gridState.Enemies)
         {
-            
             enemy.MoveTo(enemyResult.FinalPositions[enemyId]);
+            RegisterWeakenedCell(enemyResult.FinalPositions[enemyId]);
             enemyId++;
         }
 
         // 3️ Mise à jour visuelle
-        gridVisualizer.Refresh(gridState);
+        gridVisualizer.Refresh(gridState, weakenedCells);
         return true;
     }
     private bool CheckVictory()
@@ -152,5 +163,40 @@ public class GridBrain : MonoBehaviour
         }
         return everyGoalIsReached;
     }
+
+    void RegisterWeakenedCell(Vector2Int pos)
+    {
+        if (gridState.GetCell(pos.x, pos.y).Type != CellType.Weakened)
+            return;
+
+        // Déjà enregistrée → rien à faire
+        if (weakenedCells.ContainsKey(pos))
+        {
+            var toDestroy = new List<Vector2Int>();
+            weakenedCells[pos]--;
+            return;
+        }
+
+        weakenedCells[pos] = 2;
+    }
+    void TickWeakenedCells()
+    {
+        var toDestroy = new List<Vector2Int>();
+        foreach (var cell in weakenedCells)
+        {
+            if (cell.Value <= 0)
+            {
+                toDestroy.Add(cell.Key);
+            }
+        }
+        foreach (var pos in toDestroy) 
+        { 
+            gridState.SetCell(pos.x, pos.y, CellType.Empty);
+            weakenedCells.Remove(pos);
+        }
+    }
+
+
+
 }
 

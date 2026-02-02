@@ -387,7 +387,7 @@ MonoBehaviour:
   UIText: {fileID: 1744246291}
   MovementsCountText: {fileID: 866137824}
   gridVisualizer: {fileID: 1470047987}
-  levelJson: {fileID: 4900000, guid: 29f7fc85ce869dd40945073c2dbb720a, type: 3}
+  levelJson: {fileID: 4900000, guid: 84b2816373ba5f14498dee9dc24ba53e, type: 3}
   GameOver: 0
   Victory: 0
 --- !u!4 &1067711395

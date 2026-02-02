@@ -242,6 +242,10 @@ public class PuzzleLevelEditor : EditorWindow
             cellColor = new Color(0f, 0.75f, 0.8f); // Turquoise
                 break;
 
+        case CellType.Weakened:
+            cellColor = new Color(0.85f, 0.7f, 0.3f); // Ambre
+                break;
+
         default:
             cellColor = Color.magenta; // debug visuel si oubli
             break;
