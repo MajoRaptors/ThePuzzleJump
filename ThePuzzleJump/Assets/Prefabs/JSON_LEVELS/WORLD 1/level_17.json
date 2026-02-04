@@ -1,0 +1,122 @@
+{
+    "width": 5,
+    "height": 6,
+    "cells": [
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 2
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 2
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 2
+        },
+        {
+            "cellType": 1
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 0
+        },
+        {
+            "cellType": 1
+        }
+    ],
+    "player": {
+        "x": 3,
+        "y": 1,
+        "direction": 0,
+        "enemyType": 0
+    },
+    "enemies": [
+        {
+            "x": 3,
+            "y": 4,
+            "direction": 2,
+            "enemyType": 1
+        },
+        {
+            "x": 0,
+            "y": 3,
+            "direction": 2,
+            "enemyType": 1
+        },
+        {
+            "x": 1,
+            "y": 4,
+            "direction": 2,
+            "enemyType": 0
+        }
+    ]
+}
