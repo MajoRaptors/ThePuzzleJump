@@ -1,15 +1,15 @@
-Tous droits réservés - MajoRaptors
-
-Ce dépôt et l'intégralité de son contenu (code source, assets, modèles 3D, textes, données, etc.)
-sont la propriété exclusive de l'organisation à l'origine de la création du compte GitHub MajoRaptors.
-Toute consultation, utilisation, reproduction, modification ou distribution,
-en tout ou en partie, est strictement interdite sans autorisation écrite préalable.
-
----
-
 All rights reserved - MajoRaptors
 
 This repository and all its contents (source code, assets, 3D models, texts, data, etc.)
 are the exclusive property of the organization behind the GitHub account MajoRaptors.
 Any viewing, use, reproduction, modification or distribution,
 in whole or in part, is strictly prohibited without prior written permission.
+
+---
+
+Tous droits réservés - MajoRaptors
+
+Ce dépôt et l'intégralité de son contenu (code source, assets, modèles 3D, textes, données, etc.)
+sont la propriété exclusive de l'organisation à l'origine de la création du compte GitHub MajoRaptors.
+Toute consultation, utilisation, reproduction, modification ou distribution,
+en tout ou en partie, est strictement interdite sans autorisation écrite préalable.
